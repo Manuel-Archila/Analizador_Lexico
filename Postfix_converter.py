@@ -9,7 +9,7 @@ class Postfix_converter(object):
     
     def checkRegex(self):
         if self.regex == "":
-            return False
+            return False, "Ingrese una expresion regular"
         
         closing_par = 0
         opening_par = 0
@@ -18,6 +18,17 @@ class Postfix_converter(object):
                 opening_par += 1
             if i == ")":
                 closing_par += 1
+        if opening_par != closing_par:
+            return False, "Error en la expresion regular, no hay el mismo numero de parentesis de apertura y cierre"
+        
+        if self.regex[0] in self.operands:
+            return False, "Error en la expresion regular, no puede empezar con un operador"
+        
+        if self.regex[-1] in self.b_operands:
+            return False, "Error en la expresion regular, no puede terminar con un operador binario"
+        
+        return False, "Expresion regular aceptada"
+        
 
 
     def parseRegex(self, regex):
