@@ -6,6 +6,18 @@ class Postfix_converter(object):
         self.regex = regex
         self.toPostFix()
         self.postfix = self.parseRegex(self.postfix)
+    
+    def checkRegex(self):
+        if self.regex == "":
+            return False
+        
+        closing_par = 0
+        opening_par = 0
+        for i in self.regex:
+            if i == "(":
+                opening_par += 1
+            if i == ")":
+                closing_par += 1
 
 
     def parseRegex(self, regex):

@@ -62,9 +62,9 @@ class Thompson(object):
         n4 = Node(False, False, {}, self.assignValue())
 
         n1.addTransition("ε", n2)
+        n1.addTransition("ε", n4)
         n3.addTransition("ε", n4)
         n3.addTransition("ε", n2)
-        n1.addTransition("ε", n4)
 
         self.route.append(n1)
         self.route.append(n4)
@@ -105,6 +105,9 @@ class Thompson(object):
         n3.addTransition("ε", n6)
         n5.addTransition("ε", n6)
 
+        self.route.append(n1)
+        self.route.append(n6)
+
         return [n1, n6]
     
     def unite(self, operand, expression):
@@ -121,21 +124,26 @@ class Thompson(object):
 
     def construction(self):
         first_pop = self.stack.pop()
-
         if first_pop in self.b_operands:
+            #print("first_pop, es un operador binario", first_pop)
             pop1 = self.stack.pop()
+            #print("pop1", pop1)
             if pop1 in self.operands:
+                #print("pop1, es un operador", pop1)
                 self.stack.append(pop1)
                 pop1 = self.construction()
             pop2 = self.stack.pop()
             if pop2 in self.operands:
+                #print("pop2, es un operador", pop2)
                 self.stack.append(pop2)
                 pop2 = self.construction()
             
             if type(pop1) == str:
+                #print("hice transicion a pop1", pop1)
                 pop1 = self.sTransition(pop1)
             
             if type(pop2) == str:
+                #print("hice transicion a pop2", pop2)
                 pop2 = self.sTransition(pop2)
             
             #print(first_pop)
@@ -144,12 +152,14 @@ class Thompson(object):
             return self.unite(first_pop, [pop1, pop2])
         
         if first_pop in self.u_operands:
+            #print("first_pop, es un operador unario", first_pop)
             pop1 = self.stack.pop()
             if pop1 in self.operands:
                 self.stack.append(pop1)
                 pop1 = self.construction()
             
             if type(pop1) == str:
+                #print("hice transicion a pop1", pop1)
                 pop1 = self.sTransition(pop1)
             #print(first_pop, pop1)
             return self.unite(first_pop, pop1)
