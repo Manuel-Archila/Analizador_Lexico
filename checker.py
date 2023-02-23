@@ -34,9 +34,13 @@ class Checker(object):
             try:
                 if self.regex[i] == "(" and self.regex[i + 1] == ")":
                     return False, "Error: existen parentesis vacios."
-                
-                if self.regex[i] in self.operands and self.regex[i + 1] in self.operands:
-                    return False, "Error: no puede haber dos operadores seguidos.", self.regex
+
+                if self.regex[i] in self.b_operands and self.regex[i + 1] in self.b_operands:
+                    return False, "Error: no puede haber dos operadores binarios seguidos.", self.regex
+
+                if self.regex[i] in self.b_operands and self.regex[i + 1] in self.u_operands:
+                    return False, "Error: no puede haber un operador unario sobre un operador binaro.", self.regex
+                    
             except:
                 pass
 
