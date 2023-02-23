@@ -8,6 +8,7 @@ class Checker(object):
     
     def checkRegex(self):
         #print(len(self.regex))
+        errors = []
         self.regex = self.regex.replace(" ", "")
         #print(len(self.regex))
         if self.regex == "":
