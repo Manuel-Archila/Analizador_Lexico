@@ -1,55 +1,57 @@
-import pydot
+from graphviz import Digraph
 from Postfix_converter import *
 from Thompson import *
 from collections import *
+from checker import *
 
 
+running = True
+while running:
+    input_regex = input("Ingrese la expresion regular: ")
 
-input_regex = input("Ingrese la expresion regular: ")
-
-converter = Postfix_converter(input_regex)
-accepted, message = converter.checkRegex()
-print(message)
-if accepted:
-    print(converter.postfix)
-    thomp = Thompson(converter.postfix)
-    thomp_afn = thomp.construction()
-    thomp_afn[0].start = True
-    thomp_afn[1].end = True
-
-
-    afn = pydot.Dot(graph_type='digraph', rankdir='LR')
-
-    first_node = thomp_afn[0]
-    ordered_nodes = []
-    visited_nodes = {first_node}
-    queue = deque([first_node])
-    while queue:
-        node = queue.popleft()
-        ordered_nodes.append(node)
-        for i in node.transitions.keys():
-            for j in node.transitions[i]:
-                if j not in visited_nodes:
-                    for k in thomp.route:
-                        if k.value == j:
-                            visited_nodes.add(j)
-                            queue.append(k)
-                        
+    checker = Checker(input_regex)
+    accepted, message, new_regex = checker.checkRegex()
+    print(message)
+    if accepted:
+        converter = Postfix_converter(new_regex)
+        print(converter.postfix)
+        thomp = Thompson(converter.postfix)
+        thomp_afn = thomp.construction()
+        thomp_afn[0].start = True
+        thomp_afn[1].end = True
 
 
-    for i in ordered_nodes:
-        if i.end:
-            temp_node = pydot.Node(str(i.value), peripheries = '2')
-        else:
-            temp_node = pydot.Node(str(i.value))
-        afn.add_node(temp_node)
+        afn = Digraph(format="png", graph_attr={'rankdir': 'LR'})
 
-    for i in ordered_nodes:
-        for j in i.transitions.keys():
-            for k in i.transitions[j]:
-                if j == "ε":
-                    afn.add_edge(pydot.Edge(str(i.value),str(k), label = "&"))
-                else:
-                    afn.add_edge(pydot.Edge(str(i.value), str(k), label = j))
+        first_node = thomp_afn[0]
+        ordered_nodes = []
+        visited_nodes = {first_node}
+        queue = deque([first_node])
+        while queue:
+            node = queue.popleft()
+            ordered_nodes.append(node)
+            for i in node.transitions.keys():
+                for j in node.transitions[i]:
+                    if j not in visited_nodes:
+                        for k in thomp.route:
+                            if k.value == j:
+                                visited_nodes.add(j)
+                                queue.append(k)
+                            
 
-    afn.write_png('afn.png')
+
+        for i in ordered_nodes:
+            if i.end:
+                afn.node(str(i.value), peripheries = '2')
+            else:
+                afn.node(str(i.value))
+
+        for i in ordered_nodes:
+            for j in i.transitions.keys():
+                for k in i.transitions[j]:
+                    afn.edge(str(i.value), str(k), label = j)
+
+        afn.render('./render/grapgh.gv', view=True)
+        contine = input("Desea ingresar otra expresion regular? (y/n)")
+        if contine == 'n':
+            running = False

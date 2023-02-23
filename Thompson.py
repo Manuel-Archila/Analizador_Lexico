@@ -150,8 +150,7 @@ class Thompson(object):
             #print(pop1)
             #print(pop2)
             return self.unite(first_pop, [pop1, pop2])
-        
-        if first_pop in self.u_operands:
+        elif first_pop in self.u_operands:
             #print("first_pop, es un operador unario", first_pop)
             pop1 = self.stack.pop()
             if pop1 in self.operands:
@@ -163,4 +162,7 @@ class Thompson(object):
                 pop1 = self.sTransition(pop1)
             #print(first_pop, pop1)
             return self.unite(first_pop, pop1)
+        else:
+            #print("first_pop, es un simbolo", first_pop)
+            return self.sTransition(first_pop)
         
