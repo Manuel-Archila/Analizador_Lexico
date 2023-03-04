@@ -6,16 +6,18 @@ class Postfix_converter(object):
         self.regex = regex
         self.toPostFix()
         self.postfix = self.parseRegex(self.postfix)
+        self.language = []
+        self.getLanguage()
+    
+    def getLanguage(self):
+        for i in range(len(self.postfix)):
+            if self.postfix[i] not in self.operands and self.postfix[i] not in self.language and self.postfix[i] != "ε":
+                self.language.append(self.postfix[i])
     
     def parseRegex(self, regex):
         replaced_regex = regex.replace("?", "ε|")
         #print(replaced_regex)
         return replaced_regex
-
-    
-    def isOperand(self, character):
-        operands= ["|", ".", "+", "*"]
-        return character not in operands
 
     
     def concatenations(self, regex):
@@ -30,7 +32,7 @@ class Postfix_converter(object):
                     new_regex += regex[i]
             except:
                 new_regex += regex[i]
-                #print(new_regex)
+        #print(new_regex)
         return new_regex
     
 
