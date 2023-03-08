@@ -166,3 +166,4 @@ class Thompson(object):
             #print("first_pop, es un simbolo", first_pop)
             return self.sTransition(first_pop)
         
+    

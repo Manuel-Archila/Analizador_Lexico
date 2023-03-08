@@ -4,8 +4,6 @@ class to_AFD(object):
     def __init__(self):
         self.Dstates = {}
         self.visited_nodes = []
-    
-
 
     def e_closure(self, node):
         #reachable_states_nodes = []
@@ -94,9 +92,39 @@ class to_AFD(object):
         
         
         route = []
-        for key in self.Dstates:
+        for key in self.Dstates: 
             route.append(self.Dstates[key])
         return route
+    
+    def simulateAFN(self, start, string, end):
+        next_trans = []
+        node_transition = []
+        for i in string:
+            next_trans.append(i)
+        
+        actual_state = self.e_closure(start)
+        self.visited_nodes = []
+        if start.value == end.value and len(next_trans) == 0:
+            return True
+        elif len(next_trans) == 0:
+            for node_e2 in actual_state[1]:
+                if node_e2.value == end.value:
+                    return True
+            return False
+        
+        transition = next_trans.pop(0)
+        for node_e in actual_state[1]:
+            if node_e.hasNext(transition):
+                node_transition.append(node_e.getNext(transition))
+        
+        if len(node_transition) == 0:
+            return False
+
+        for visited_node in node_transition:
+            temp = self.simulateAFN(visited_node[0], string[1:len(string)], end)
+            if temp:
+                return True
+        return False
 
         
                     

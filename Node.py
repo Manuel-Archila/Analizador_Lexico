@@ -14,12 +14,13 @@ class Node(object):
             self.transitions[element] = [node.value]
             self.nextmove[element]=[node]
         
+        #print("Transition: " + str(self.value) + " " + str(element) + " " + str(node.value))
         #print(self.transitions)
         #print(self.nextmove)
 
     
     def __repr__(self): 
-        return "Node: " + self.value + " Start: " + str(self.start) + " End: " + str(self.end) + " Transitions: " + str(self.transitions)
+        return "Node: " + str(self.value) + " Start: " + str(self.start) + " End: " + str(self.end) + " Transitions: " + str(self.transitions)
 
     #def __repr__(self):
         #return self.value
